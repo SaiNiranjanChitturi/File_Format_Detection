@@ -3,8 +3,8 @@ from typing import Dict, Any, Tuple, BinaryIO, Optional
 from io import BytesIO
 import os
 
-__version__ = "0.1.2"  # Updated version
-__author__ = "Your Name"  # Replace with your name or organization
+__version__ = "1.0.0"  # Updated version
+__author__ = "Sai Niranjan Chitturi, Leela Sai Surya Veer Pedarla, Bhargav Dasari, Kavya Sri Punna, Vinay Appari, Chandralekha Alluri, Eknath Narravula, Pavan, Divya, OpenAI, xAI"  # Replace with your name or organization
 __license__ = "MIT"  # Or whichever license you prefer
 
 # -------------------------------------------------------------------------
