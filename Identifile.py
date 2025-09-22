@@ -8,10 +8,10 @@ __author__ = "Sai Niranjan Chitturi, Leela Sai Surya Veer Pedarla, Bhargav Dasar
 __license__ = "MIT"  # Or whichever license you prefer
 
 # -------------------------------------------------------------------------
-# Class: FileFormatDetection
+# Class: Identifile
 # -------------------------------------------------------------------------
 @dataclass
-class FileFormatDetection:
+class Identifile:
     """
     Represents the result of file format detection.
     
@@ -172,7 +172,7 @@ def _read_ranges(fp: BinaryIO, head_n: int = 64, tail_n: int = 64,
     return head, tail, tar_slice
 
 
-def _detect_from_ranges(head: bytes, tail: bytes, tar_slice: bytes) -> FileFormatDetection:
+def _detect_from_ranges(head: bytes, tail: bytes, tar_slice: bytes) -> Identifile:
     """Apply signature checks to the extracted byte ranges."""
     def starts_with_any(buf: bytes, patterns: list) -> bool:
         return any(buf.startswith(p) for p in patterns if p)
@@ -189,7 +189,7 @@ def _detect_from_ranges(head: bytes, tail: bytes, tar_slice: bytes) -> FileForma
 
         if "heuristic" in sig:
             if sig["heuristic"](head):
-                return FileFormatDetection(fmt, confidence, sig["evidence"], {})
+                return Identifile(fmt, confidence, sig["evidence"], {})
             continue
 
         match = True
@@ -204,17 +204,17 @@ def _detect_from_ranges(head: bytes, tail: bytes, tar_slice: bytes) -> FileForma
             match = False
 
         if match:
-            return FileFormatDetection(fmt, confidence, sig["evidence"], {})
+            return Identifile(fmt, confidence, sig["evidence"], {})
 
     # Unknown
-    return FileFormatDetection("unknown", 0.0, "No decisive signature found.", {})
+    return Identifile("unknown", 0.0, "No decisive signature found.", {})
 
 
 # -------------------------------------------------------------------------
 # Main Function: sniff_format (filepath-based)
 # -------------------------------------------------------------------------
 def sniff_format(file_path: str, head_n: int = 64, tail_n: int = 64,
-                 use_extension_hint: bool = True) -> FileFormatDetection:
+                 use_extension_hint: bool = True) -> Identifile:
     """
     Identify common compression/archival/columnar formats by signatures from a file path.
     
@@ -225,10 +225,10 @@ def sniff_format(file_path: str, head_n: int = 64, tail_n: int = 64,
         use_extension_hint: If True, use file extension as a hint for undetected formats like raw Snappy.
     
     Returns:
-        FileFormatDetection object.
+        Identifile object.
     """
     if not os.path.exists(file_path):
-        return FileFormatDetection("unknown", 0.0, "File not found.", {})
+        return Identifile("unknown", 0.0, "File not found.", {})
     
     try:
         with open(file_path, "rb") as fp:
@@ -238,7 +238,7 @@ def sniff_format(file_path: str, head_n: int = 64, tail_n: int = 64,
         if detection.format == "unknown" and use_extension_hint:
             ext = os.path.splitext(file_path)[1].lower()
             if ext in {".snappy", ".sz", ".snz"}:
-                return FileFormatDetection(
+                return Identifile(
                     "snappy-raw",
                     0.5,
                     f"Based on file extension '{ext}', likely raw Snappy (no header).",
@@ -247,7 +247,7 @@ def sniff_format(file_path: str, head_n: int = 64, tail_n: int = 64,
         
         return detection
     except Exception as e:
-        return FileFormatDetection("unknown", 0.0, f"I/O error: {str(e)}", {})
+        return Identifile("unknown", 0.0, f"I/O error: {str(e)}", {})
 
 
 # -------------------------------------------------------------------------
@@ -255,7 +255,7 @@ def sniff_format(file_path: str, head_n: int = 64, tail_n: int = 64,
 # -------------------------------------------------------------------------
 def sniff_stream(stream: BinaryIO, head_n: int = 64, tail_n: int = 64,
                  buffer_non_seekable: bool = True,
-                 extension_hint: Optional[str] = None) -> FileFormatDetection:
+                 extension_hint: Optional[str] = None) -> Identifile:
     """
     Identify format from a file-like object.
     
@@ -271,7 +271,7 @@ def sniff_stream(stream: BinaryIO, head_n: int = 64, tail_n: int = 64,
         extension_hint: Optional file extension (e.g., '.snz') to use as hint for undetected formats.
     
     Returns:
-        FileFormatDetection object.
+        Identifile object.
     
     Warning:
         For large non-seekable streams, buffering may use significant memory.
@@ -303,7 +303,7 @@ def sniff_stream(stream: BinaryIO, head_n: int = 64, tail_n: int = 64,
         if detection.format == "unknown" and extension_hint:
             ext = extension_hint.lower().lstrip('.')
             if ext in {"snappy", "sz", "snz"}:
-                return FileFormatDetection(
+                return Identifile(
                     "snappy-raw",
                     0.5,
                     f"Based on extension hint '.{ext}', likely raw Snappy (no header).",
@@ -312,7 +312,7 @@ def sniff_stream(stream: BinaryIO, head_n: int = 64, tail_n: int = 64,
         
         return detection
     except Exception as e:
-        return FileFormatDetection("unknown", 0.0, f"Stream read error: {str(e)}", {})
+        return Identifile("unknown", 0.0, f"Stream read error: {str(e)}", {})
 
 
 # -------------------------------------------------------------------------

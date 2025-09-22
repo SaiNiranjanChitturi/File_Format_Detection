@@ -6,9 +6,9 @@ import tempfile
 
 # Assuming the library is saved as fileformatdetect.py and imported here.
 # If it's in the same file, adjust accordingly.
-from FileFormatDetection import add_signature, sniff_stream, sniff_format, SIGNATURES
+from Identifile import add_signature, sniff_stream, sniff_format, SIGNATURES
 
-class TestFileFormatDetection(unittest.TestCase):
+class TestIdentifile(unittest.TestCase):
     """
     Unit tests for the file format detection library.
     Covers all supported formats, unknown cases, and extension hints.

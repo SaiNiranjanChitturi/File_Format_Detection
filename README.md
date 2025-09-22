@@ -1,11 +1,11 @@
-# File Format Detection
+# Identifile
 
 Lightweight Python library to detect common file formats (compression, archive, and columnar storage) by inspecting file signatures and heuristics.
 
 ## Project
 
-- Name: File Format Detection
-- Version: 1.0.0
+- Name: Identifile
+- Version: 2.0.0
 - Authors: Sai Niranjan Chitturi, Leela Sai Surya Veer Pedarla, Bhargav Dasari, Kavya Sri Punna, Vinay Appari, Chandralekha Alluri, Eknath Narravula, Pavan, Divya, OpenAI, xAI
 - License: MIT
 
@@ -21,7 +21,7 @@ This repository contains a small utility to sniff file formats from a file path 
 
 ## Files
 
-- `FileFormatDetection.py` — Main implementation (defines `FileFormatDetection`, `sniff_format`, `sniff_stream`, `add_signature`, and `SIGNATURES`).
+- `Identifile.py` — Main implementation (defines `Identifile`, `sniff_format`, `sniff_stream`, `add_signature`, and `SIGNATURES`).
 - `testFormat.py` — Unit tests covering detection logic and edge-cases using `unittest`.
 
 ## Usage
@@ -29,7 +29,7 @@ This repository contains a small utility to sniff file formats from a file path 
 Example (detect from file path):
 
 ```python
-from FileFormatDetection import sniff_format
+from Identifile import sniff_format
 
 result = sniff_format('example.gz')
 print(result.summary())
@@ -38,7 +38,7 @@ print(result.summary())
 Example (detect from stream):
 
 ```python
-from FileFormatDetection import sniff_stream
+from Identifile import sniff_stream
 from io import BytesIO
 
 stream = BytesIO(b'\x1f\x8b' + b'\x00'*100)
@@ -49,17 +49,17 @@ print(result.format, result.confidence, result.evidence)
 Add a custom signature:
 
 ```python
-from FileFormatDetection import add_signature
+from Identifile import add_signature
 
 add_signature('myfmt', {'start': [b'\xAA\xBB'], 'evidence': 'My custom format.'})
 ```
 
 ## API Summary
 
-- FileFormatDetection(format: str, confidence: float, evidence: str, extra: dict)
+- Identifile(format: str, confidence: float, evidence: str, extra: dict)
 	- Methods: `is_known()`, `is_compressed()`, `is_archive()`, `is_columnar()`, `summary()`, `metadata()`
-- sniff_format(file_path: str, head_n: int = 64, tail_n: int = 64, use_extension_hint: bool = True) -> FileFormatDetection
-- sniff_stream(stream: BinaryIO, head_n: int = 64, tail_n: int = 64, buffer_non_seekable: bool = True, extension_hint: Optional[str] = None) -> FileFormatDetection
+- sniff_format(file_path: str, head_n: int = 64, tail_n: int = 64, use_extension_hint: bool = True) -> Identifile
+- sniff_stream(stream: BinaryIO, head_n: int = 64, tail_n: int = 64, buffer_non_seekable: bool = True, extension_hint: Optional[str] = None) -> Identifile
 - add_signature(format_name: str, signature: dict, overwrite: bool = False)
 
 ## Running Tests
@@ -71,7 +71,7 @@ python -m unittest testFormat.py
 ```
 
 Notes:
-- Tests in `testFormat.py` reference `FileFormatDetection` module and exercise both file and stream-based detection. Ensure the working directory includes `FileFormatDetection.py`.
+- Tests in `testFormat.py` reference `Identifile` module and exercise both file and stream-based detection. Ensure the working directory includes `Identifile.py`.
 
 ## License
 
@@ -79,7 +79,7 @@ This project is licensed under the MIT License. See the `LICENSE` file for detai
 
 ## Authors and Contributors
 
-- Your Name <your.email@example.com> — primary author. Update `FileFormatDetection.py` to set `__author__` and replace this entry.
+- Your Name <your.email@example.com> — primary author. Update `Identifile.py` to set `__author__` and replace this entry.
 - Tests and example usage were authored based on the implementation in `testFormat.py`.
 
 Contributions are welcome. Please open issues or pull requests with improvements, additional signatures, or bug fixes.
@@ -91,8 +91,8 @@ Contributions are welcome. Please open issues or pull requests with improvements
 
 ## Changes
 
-- v0.1.2 — initial public snapshot (version string found in `FileFormatDetection.py`).
+- v0.1.2 — initial public snapshot (version string found in `Identifile.py`).
 
 ---
 
-If you'd like, I can also update the `__author__` value in `FileFormatDetection.py` to match a specific name/email and add a short example script. Tell me how you'd like the author line to read.
+If you'd like, I can also update the `__author__` value in `Identifile.py` to match a specific name/email and add a short example script. Tell me how you'd like the author line to read.
